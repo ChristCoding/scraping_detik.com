@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 from flask import Flask , render_template
+from selenium import webdriver
+from selenium.webdriver.common.by import By
 
 app = Flask ( __name__ )
 
@@ -39,6 +41,21 @@ def idr_rates() :
         return render_template ( 'idr_rates.html' , datas=json_data.values ( ) )
     else :
         return None
+
+
+@app.route ( '/carousell' )
+def carousell() :
+    try :
+        headers = {
+            'user agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36' }
+        source = requests.get ( 'https://id.carousell.com/categories/photography-6/' , headers=headers )
+    except :
+        return None
+
+    if source.status_code == 200 :
+        soup = BeautifulSoup ( source.text , 'html.parser' )
+        card = soup.find(attrs={'class':'D_yQ M_wZ D_Q'})
+    return render_template ( 'carousell.html' , datas=card)
 
 
 if __name__ == '__main__' :
