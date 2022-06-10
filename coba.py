@@ -2,7 +2,6 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 
-chrome_driver_path = 'C:\PythonProj\chromedriver.exe'
 driver = webdriver.Chrome ( )
 
 driver.get ( 'https://id.carousell.com/categories/photography-6/?searchId=5o7Gsh' )
