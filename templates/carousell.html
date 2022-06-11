@@ -2,18 +2,14 @@
 
 {% block body %}
 <div class="container mt-3">
-  <h2>Card Image</h2>
-  {% for data in datas%}
-    {% if data is defined and data|length > 0 %}
-      <div class="card" style="width:400px">
-        <svg class="D_oA M_hX D_oC M_hZ" fill="#57585a" height="24" role="img" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M9.29 15.88L13.17 12 9.29 8.12c-.39-.39-.39-1.02 0-1.41.39-.39 1.02-.39 1.41 0l4.59 4.59c.39.39.39 1.02 0 1.41L10.7 17.3c-.39.39-1.02.39-1.41 0-.38-.39-.39-1.03 0-1.42z" id="iconArrow"></path></svg>
-        <div class="card-body">
-          <a href="https://id.carousell.com{{data.find(attrs={'class':'D_lU M_lI'})['href']}}" class="card-link">{{data.find(attrs={'class':'D_mn M_hl D_lm M_gW D_mo M_hm D_mr M_hp D_mt M_hr D_mx M_hv D_m_ M_hy D_mk'}).text}}</a>
-          <br>
-          <a>{{data.find(attrs={'class':'D_mn M_hl D_lm M_gW D_mo M_hm D_mr M_hp D_mt M_hr D_mx M_hv D_mz M_hx D_mj'})['title']}}</a>
-        </div>
+  <h1>List of Items in Photography (Scraping From id.carousell.com)</h1>
+  {% for data in datas %}
+    <div class="card" style="width:400px">
+      <img class="card-img-top" style="width:100%" src="{{ data['source']|safe }}"></img>
+      <div class="card-body">
+        <p href="{{data['titlelink']|safe}}" class="card-text">{{ data['title']|safe }}</p>
       </div>
-    {% endif %}
+    </div>
   {% endfor %}
   <br>
 </div>

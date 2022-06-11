@@ -1,6 +1,7 @@
 {% extends 'index.html' %}
 
 {% block body %}
+  <h1>Latest Popular News (Scraping From detik.com)</h1>
   {% for image in images %}
   {{ image|safe }}
   <a href="{{ image.find('a')['href']|safe}}">{{ image.find('img')['title']|safe}}</a>

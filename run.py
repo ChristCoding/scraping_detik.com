@@ -2,7 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 from flask import Flask , render_template
 from selenium import webdriver
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
+
 
 app = Flask ( __name__ )
 
@@ -45,17 +47,47 @@ def idr_rates() :
 
 @app.route ( '/carousell' )
 def carousell() :
-    try :
-        headers = {
-            'user agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36' }
-        source = requests.get ( 'https://id.carousell.com/categories/photography-6/' , headers=headers )
-    except :
-        return None
+    driver = webdriver.Chrome ( )
+    driver.get ( 'https://id.carousell.com/categories/photography-6/?searchId=5o7Gsh' )
 
-    if source.status_code == 200 :
-        soup = BeautifulSoup ( source.text , 'html.parser' )
-        card = soup.find(attrs={'class':'D_yQ M_wZ D_Q'})
-    return render_template ( 'carousell.html' , datas=card)
+    for n in range ( 1 , 50 ) :
+        ActionChains ( driver ).scroll_by_amount ( 0 , 100 ).perform ( )
+    for n in range ( 1 , 50 ) :
+        ActionChains ( driver ).scroll_by_amount ( 0 , -100 ).perform ( )
+    images = driver.find_elements ( By.CSS_SELECTOR , 'main img' )
+    links = driver.find_elements ( By.CSS_SELECTOR , 'main a' )
+    datas = [ ]
+    title = None
+    source = None
+    titlelink = None
+    for image , link in zip ( images , links ) :
+        try :
+            if image.get_attribute ( 'title' ) != '' :
+                title = (image.get_attribute ( 'title' ))
+                source = (image.get_attribute ( 'src' ))
+            if link.get_attribute ( 'href' ).find ( 'https://id.carousell.com/p/' ) >= 0 :
+                titlelink = (link.get_attribute ( 'href' ))
+            data = {
+                'title' : title,
+                'titlelink' : titlelink,
+                'source' : source,
+            }
+            datas.append ( data )
+        except :
+            break
+    driver.quit ( )
+    datas.pop ( 0 )
+    driver.quit ( )
+    datas.pop ( 0 )
+    newdatas = [ ]
+    for data in datas :
+        newdatas.append ( data )
+        if len ( newdatas ) > 2 :
+            if newdatas [ len ( newdatas ) - 2 ] == newdatas [ len ( newdatas ) - 1 ] :
+                newdatas.pop ( len ( newdatas ) - 1 )
+    newdatas.pop ( 0 )
+    return render_template ( 'carousell.html' , datas=newdatas )
+
 
 
 if __name__ == '__main__' :
