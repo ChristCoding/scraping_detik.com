@@ -56,10 +56,19 @@ def carousell() :
         ActionChains ( driver ).scroll_by_amount ( 0 , -100 ).perform ( )
     images = driver.find_elements ( By.CSS_SELECTOR , 'main img' )
     links = driver.find_elements ( By.CSS_SELECTOR , 'main a' )
+    prices= driver.find_element(By.TAG_NAME,'main').find_elements(By.TAG_NAME,'p')
     datas = [ ]
+    data_price=[]
     title = None
     source = None
     titlelink = None
+    itemprice=None
+
+    for price in prices :
+        if price.get_attribute ( 'title' ).find ( 'Rp' ) >= 0 :
+            data_price.append(price.get_attribute ( 'title' ) )
+    data_price.pop(0)
+
     for image , link in zip ( images , links ) :
         try :
             if image.get_attribute ( 'title' ) != '' :
@@ -71,6 +80,7 @@ def carousell() :
                 'title' : title,
                 'titlelink' : titlelink,
                 'source' : source,
+                'price': 0,
             }
             datas.append ( data )
         except :
@@ -86,6 +96,11 @@ def carousell() :
             if newdatas [ len ( newdatas ) - 2 ] == newdatas [ len ( newdatas ) - 1 ] :
                 newdatas.pop ( len ( newdatas ) - 1 )
     newdatas.pop ( 0 )
+    n=0
+    for newdata in newdatas:
+        newdata['price']=data_price[n]
+        n+=1
+
     return render_template ( 'carousell.html' , datas=newdatas )
 
 
