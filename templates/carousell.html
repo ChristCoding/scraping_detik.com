@@ -2,16 +2,20 @@
 
 {% block body %}
 <h1>List of Items in Photography (Scraping From id.carousell.com)</h1>
-    {% for data in datas %}
-        <div class="card" style="width:400px">
-          <img class="card-img-top" style="width:100%" src="{{ data['source']|safe }}"></img>
-          <div class="card-body">
-            <br>
-            <a href="{{data['titlelink']|safe}}" class="card-text">{{ data['title']|safe }}</a>
-            <br>
-            <a>Harga : {{data['price']}}</a>
-            <br>
-          </div>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for data in datas %}
+        <div class="col">
+            <div class="card" style="width:400px">
+                <img width="300px" height="300px" object-fit="cover" class="card-img-top" style="width:100%" src="{{ data['source']|safe }}"></img>
+                <div class="card-body">
+                    <br>
+                    <a href="{{data['titlelink']|safe}}" class="card-text">{{ data['title']|safe }}</a>
+                    <br>
+                    <a>Harga : {{data['price']}}</a>
+                    <br>
+                </div>
+            </div>
         </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
 {% endblock%}
