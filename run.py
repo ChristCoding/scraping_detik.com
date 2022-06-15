@@ -1,10 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 from flask import Flask , render_template
-from selenium import webdriver
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.by import By
 from carousell import carousell
+from postgre_dbase.dbase import insert_vendor
 
 app = Flask ( __name__ )
 
@@ -49,6 +47,8 @@ def idr_rates() :
 def carousel() :
     newdatas=carousell()
 
+    for datum in newdatas:
+        insert_vendor ( datum [ 'title' ] , datum [ 'titlelink' ] , datum [ 'source' ] , datum [ 'price' ] )
     return render_template ( 'carousell.html' , datas=newdatas )
 
 
