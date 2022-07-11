@@ -1,2 +1,2 @@
 # scraping_detik.com
-Scraping detik.com and publish it on html using flask
+Scraping several sites and publish them on html using flask
